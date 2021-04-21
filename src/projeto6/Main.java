@@ -64,6 +64,13 @@ public class Main {
 		listTree.forEach(el -> {
 			System.out.println(el);
 		});
-
+		
+		//teste construtor
+		Tree tree1 = new Tree();
+		
+		tree1.root = new Node(listTree.get(0).root, listTree.get(1).root, listTree.get(0).root.value + listTree.get(1).root.value, null);
+		
+		System.out.println(tree1);
+		
 	}
 }

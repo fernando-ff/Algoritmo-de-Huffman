@@ -19,11 +19,12 @@ public class Node {
 		this.value = value;
 		this.parent= parent;
 	}
+	//quando instaciava um novo no' esse nao tinha referencia dos filhos
 	public Node(Node l, Node r, int v, Node p) {
 		if(l != null)
-			left = new Node(l.symbol, l.value, this);
+			left = l/*new Node(l.symbol, l.value, this)*/;
 		if(r!= null)
-			right = new Node(r.symbol, r.value, this);
+			right = r/*new Node(r.symbol, r.value, this)*/;
 		value = v;
 		parent = p;
 		
