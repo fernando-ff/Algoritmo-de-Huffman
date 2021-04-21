@@ -11,10 +11,10 @@ public class Tree {
 		return insert(e, c);
 	}
 
-	private boolean insert(int value, Character c) {
+	private boolean insert(int frequency, Character c) {
 		// Se a raiz for nula
 		if (root == null) {
-			root = new Node(c, value, null);
+			root = new Node(c, frequency, null);
 			size = 1;
 			return true;
 		} else {
@@ -24,12 +24,12 @@ public class Tree {
 			while (!queue.isEmpty() && !inserted) {
 				Node current = queue.removeFirst();
 				if (!current.hasLeft()) {
-					current.left = new Node(c, value, current);
+					current.left = new Node(c, frequency, current);
 					inserted = true;
 					up(current.left);
 					size++;
 				} else if (!current.hasRight()) {
-					current.right = new Node(c, value, current);
+					current.right = new Node(c, frequency, current);
 					inserted = true;
 					up(current.right);
 					size++;
@@ -44,15 +44,15 @@ public class Tree {
 		}
 	}
 
-	public void insert(Node left, Node right, int value) {
+	public void insert(Node left, Node right, int frequency) {
 		// Se a raiz for nula
 		if (root == null) {
-			root = new Node(left, right, value, null);
+			root = new Node(left, right, frequency, null);
 			size = 1;
 		} else {
-			Node r = new Node(root.left, root.right, root.value, root);
-			Node k = new Node(left, right, value, root);
-			root = new Node(r.left, k.right, value + r.value, null);
+			Node r = new Node(root.left, root.right, root.frequency, root);
+			Node k = new Node(left, right, frequency, root);
+			root = new Node(r.left, k.right, frequency + r.frequency, null);
 
 		}
 	}
@@ -68,33 +68,61 @@ public class Tree {
 			boolean inserted = false;
 			while (!queue.isEmpty() && !inserted) {
 				Node current = queue.removeFirst();
-				if (!current.hasLeft()) {
-					current.left = new Node(newNode.symbol, newNode.value, current);
+				if (!current.hasLeft() ) {
+					current.left = new Node(newNode.symbol, newNode.frequency, current);
+					if((newNode.hasLeft() || newNode.hasRight()))
+						inserty(current.left);
 					inserted = true;
 					up(current.left);
 					size++;
 				} else if (!current.hasRight()) {
-					current.right = new Node(newNode.symbol, newNode.value, current);
+					current.right = new Node(newNode.symbol, newNode.frequency, current);
+					if(newNode.hasLeft() || newNode.hasRight())
+						inserty(current.right);
 					inserted = true;
 					up(current.right);
 					size++;
 				} else {
-					if (current.hasLeft())
+					if (current.hasLeft() && current.symbol != null)
 						queue.add(current.left);
-					if (current.hasRight())
+					if (current.hasRight() && current.symbol != null)
 						queue.add(current.right);
 				}
+			}
+		}
+	}
+	void inserty(Node newNode){
+		LinkedList<Node> queue = new LinkedList<>();
+		queue.addLast(newNode);
+		boolean inserted = false;
+		while (!queue.isEmpty() && !inserted) {
+			Node current = queue.removeFirst();
+			if (!current.hasLeft()) {
+				current.left = new Node(newNode.symbol, newNode.frequency, current);
+				if(newNode.hasLeft() || newNode.hasRight())
+					inserty(current);
+				inserted = true;
+				up(current.left);
+				size++;
+			} else if (!current.hasRight()) {
+				current.right = new Node(newNode.symbol, newNode.frequency, current);
+				inserted = true;
+				up(current.right);
+				size++;
+			} else {
+				if (current.hasLeft() )
+					queue.add(current.left);
+				if (current.hasRight())
+					queue.add(current.right);
 			}
 		}
 	}
 
 	private void up(Node n) {
 		// Se p valor do nó filho for maior do que o valor do nó pai
-		if (n.parent != null && n.value > n.parent.value) {
+		if (n.parent != null && n.frequency < n.parent.frequency && n.symbol != null) {
 			// Sustitua os valores deles
-			int k = n.value;
-			n.value = n.parent.value;
-			n.parent.value = k;
+			swap(n, n.parent);
 			// E compare novamente chamando agr o nó pai com valor att
 			up(n.parent);
 		}
@@ -104,11 +132,11 @@ public class Tree {
 		if (root == null) {
 			return null;
 		} else if (root.isLeaf()) {
-			Node k = new Node(root.symbol, root.value, null);
+			Node k = new Node(root.symbol, root.frequency, null);
 			root = null;
 			return k;
 		}
-		Node k = new Node(root.symbol, root.value, null);
+		Node k = new Node(root.symbol, root.frequency, null);
 		Node lastNode = null;
 		LinkedList<Node> queue = new LinkedList<>();
 		queue.addLast(root);
@@ -116,13 +144,13 @@ public class Tree {
 			Node current = queue.removeFirst();
 			lastNode = current;
 
-			if (current.hasLeft())
+			if (current.hasLeft() && current.symbol != null)
 				queue.addLast(current.left);
-			if (current.hasRight())
+			if (current.hasRight() && current.symbol != null)
 				queue.addLast(current.right);
 		}
 
-		root.value = lastNode.value;
+		root.frequency = lastNode.frequency;
 		if (lastNode.parent.left != null && lastNode.parent.left.equals(lastNode)) {
 			lastNode.parent.left = null;
 		} else {
@@ -135,35 +163,40 @@ public class Tree {
 	}
 
 	private void swap(Node n, Node n1) {
-		int k = n.value;
-		n.value = n1.value;
-		n1.value = k;
+		int k = n.frequency;
+		Character c = n.symbol;
+		n.frequency = n1.frequency;
+		n.symbol = n1.symbol;
+		n1.frequency = k;
+		n1.symbol = c;
 	}
 
 	private void down(Node n) {
-		if (n != null) {
-			if (n.right != null && n.left != null && n.value > n.right.value && n.value > n.left.value) {
-				if (n.left.value < n.right.value) {
+		if (n != null && n.symbol != null) {
+			if (n.right != null && n.left != null && n.frequency > n.right.frequency && n.frequency > n.left.frequency) {
+				if (n.left.frequency < n.right.frequency) {
 					swap(n.left, n);
 					down(n.left);
 				} else {
 					swap(n.right, n);
 					down(n.right);
 				}
-			} else if (n.left != null && n.value > n.left.value) {
+			} else if (n.left != null && n.frequency > n.left.frequency) {
 				swap(n.left, n);
 				down(n.left);
-			} else if (n.right != null && n.value > n.right.value) {
+			} else if (n.right != null && n.frequency > n.right.frequency) {
 				swap(n.right, n);
 				down(n.right);
 			}
 		}
 	}
 
-	public int get() {
-		if (root != null)
-			return root.value;
-		throw new IndexOutOfBoundsException("Heap is empty!");
+	public Node get(int i) {
+		if(i == 0)
+			return root;
+		else if(i == 1)
+			return root.left;
+		return null;
 	}
 
 	public int size() {
@@ -176,9 +209,9 @@ public class Tree {
 			queue.addLast(root);
 			while (!queue.isEmpty()) {
 				Node aux = queue.removeFirst();
-				if (current == aux.value) {
-					int k = aux.value;
-					aux.value = newValue;
+				if (current == aux.frequency) {
+					int k = aux.frequency;
+					aux.frequency = newValue;
 					if (newValue > k) {
 						up(aux);
 					} else {
