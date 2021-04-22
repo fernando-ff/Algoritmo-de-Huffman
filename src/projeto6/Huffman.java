@@ -12,20 +12,24 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Main {
+public class Huffman {
 	public static void main(String[] args) throws IOException {
-		Main algoritmo = new Main();
+		Huffman algoritmo = new Huffman();
+		if(args.length >  0)
+			algoritmo.fileName = args[0];
 		algoritmo.loading();
 		algoritmo.processing();	
-		algoritmo.charToBit();
+//		algoritmo.charToBit();
 	}
+	
 	Map<Character, Integer> listFrequency = new LinkedHashMap<>();
 	Map<Character, String> charBits = new LinkedHashMap<>();
 	List<Node> list = new ArrayList<Node>();
 	Tree tree = new Tree();
+	String fileName = "arquivo";
 
 	void loading() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader(new File("arquivo")));
+		BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
 
 		int readed = in.read();
 		while(readed != -1) {
@@ -73,29 +77,30 @@ public class Main {
 		}
 		
 		System.out.println(tree);
-	}
-	
-	void charToBit() throws IOException {
 		preOrder(tree.root, "");
 		System.out.println(charBits);
-		
-		BufferedReader in = new BufferedReader(new FileReader(new File("arquivo")));
-		
-		File fileObj = new File("arquivo-zipado");
-		fileObj.createNewFile();
-		
-		FileWriter out = new FileWriter("arquivo-zipado");
-		int readed = in.read();
-		while(readed != -1) {
-			char c = (char) readed;
-			if(charBits.containsKey(c)) {
-				String bits = charBits.get(c);
-				out.write(bits);
-			}
-			readed = in.read();
-		}
-		out.close();
 	}
+	
+//	void writeInFIle() throws IOException {
+//		System.out.println(charBits);
+//		
+//		BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
+//		
+//		File fileObj = new File(fileName+"-zipado");
+//		fileObj.createNewFile();
+//		
+//		FileWriter out = new FileWriter(fileName+"-zipado");
+//		int readed = in.read();
+//		while(readed != -1) {
+//			char c = (char) readed;
+//			if(charBits.containsKey(c)) {
+//				String bits = charBits.get(c);
+//				out.write(bits);
+//			}
+//			readed = in.read();
+//		}
+//		out.close();
+//	}
 	
 
 	private void preOrder(Node root, String bits) {
