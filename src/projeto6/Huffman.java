@@ -58,13 +58,14 @@ public class Huffman {
 				return o1.frequency - o2.frequency;
 			}		
 		};
+		
 		list.sort(cmp);
 		int i = 0;
 		while(!list.isEmpty()) {
 			if(list.size() == 1) {
 				tree.root = list.remove(0);
 			}
-			else if(list.size() > 1 && list.get(0).frequency+i == list.get(1).frequency) {
+			else if(list.size() > 1 && list.get(0).frequency+ i == list.get(1).frequency) {
 				list.add(new Node(list.get(0), list.get(1), list.get(0).frequency + list.get(1).frequency, null));
 				list.remove(0);
 				list.remove(0);
@@ -76,7 +77,6 @@ public class Huffman {
 				i++;
 			}
 		}
-		
 		System.out.println(tree);
 	}
 	
