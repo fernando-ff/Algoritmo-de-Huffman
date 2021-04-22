@@ -3,7 +3,6 @@ package projeto6;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,15 +18,16 @@ public class Huffman {
 			algoritmo.fileName = args[0];
 		algoritmo.loading();
 		algoritmo.processing();	
-//		algoritmo.charToBit();
+		algoritmo.charToBit();
+		algoritmo.bitToChar();
 	}
 	
-	Map<Character, Integer> listFrequency = new LinkedHashMap<>();
-	Map<Character, String> charBits = new LinkedHashMap<>();
-	Map<String, Character> bitsChar = new LinkedHashMap<>();
-	List<Node> list = new ArrayList<Node>();
-	Tree tree = new Tree();
-	String fileName = "arquivo";
+	private Map<Character, Integer> listFrequency = new LinkedHashMap<>();
+	private Map<Character, String> charBits = new LinkedHashMap<>();
+	private Map<String, Character> bitsChar = new LinkedHashMap<>();
+	private List<Node> list = new ArrayList<Node>();
+	private Tree tree = new Tree();
+	public String fileName = "arquivo";
 
 	void loading() throws IOException {
 		BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
@@ -78,32 +78,12 @@ public class Huffman {
 		}
 		
 		System.out.println(tree);
-		preOrder(tree.root, "");
-		bitToChar(tree.root, "");
-		System.out.println(charBits);
-		System.out.println(bitsChar);
 	}
 	
-//	void writeInFIle() throws IOException {
-//		System.out.println(charBits);
-//		
-//		BufferedReader in = new BufferedReader(new FileReader(new File(fileName)));
-//		
-//		File fileObj = new File(fileName+"-zipado");
-//		fileObj.createNewFile();
-//		
-//		FileWriter out = new FileWriter(fileName+"-zipado");
-//		int readed = in.read();
-//		while(readed != -1) {
-//			char c = (char) readed;
-//			if(charBits.containsKey(c)) {
-//				String bits = charBits.get(c);
-//				out.write(bits);
-//			}
-//			readed = in.read();
-//		}
-//		out.close();
-//	}
+	public void charToBit() {
+		preOrder(tree.root, "");
+		System.out.println(charBits);
+	}
 	
 
 	private void preOrder(Node root, String bits) {
@@ -120,6 +100,11 @@ public class Huffman {
 		}
 	}
 	
+	public void bitToChar() {
+		bitToChar(tree.root, "");
+		System.out.println(bitsChar);
+	}
+	
 	private void bitToChar(Node node, String str) {
 		if(node != null) {
 			//if(node.left != null) {
@@ -132,6 +117,6 @@ public class Huffman {
 				bitsChar.put(str, node.symbol);
 			}
 		}
-		
+
 	}
 }
