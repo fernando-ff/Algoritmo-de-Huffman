@@ -24,6 +24,7 @@ public class Huffman {
 	
 	Map<Character, Integer> listFrequency = new LinkedHashMap<>();
 	Map<Character, String> charBits = new LinkedHashMap<>();
+	Map<String, Character> bitsChar = new LinkedHashMap<>();
 	List<Node> list = new ArrayList<Node>();
 	Tree tree = new Tree();
 	String fileName = "arquivo";
@@ -78,7 +79,9 @@ public class Huffman {
 		
 		System.out.println(tree);
 		preOrder(tree.root, "");
+		bitToChar(tree.root, "");
 		System.out.println(charBits);
+		System.out.println(bitsChar);
 	}
 	
 //	void writeInFIle() throws IOException {
@@ -115,5 +118,20 @@ public class Huffman {
 			bits += "1";
 			preOrder(root.right, bits);
 		}
+	}
+	
+	private void bitToChar(Node node, String str) {
+		if(node != null) {
+			//if(node.left != null) {
+				bitToChar(node.left, str+"0");
+			//}
+			//if(node.right != null) {
+				bitToChar(node.right, str+"1");
+			//}
+			if(node.symbol != null) {
+				bitsChar.put(str, node.symbol);
+			}
+		}
+		
 	}
 }
