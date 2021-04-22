@@ -15,17 +15,17 @@ import java.util.Map;
 public class Main {
 	public static void main(String[] args) throws IOException {
 		Main algoritmo = new Main();
-		algoritmo.loading();
+		algoritmo.loading("file2");
 		algoritmo.processing();	
-		algoritmo.charToBit();
+		algoritmo.charToBit("file2");
 	}
 	Map<Character, Integer> listFrequency = new LinkedHashMap<>();
 	Map<Character, String> charBits = new LinkedHashMap<>();
 	List<Node> list = new ArrayList<Node>();
 	Tree tree = new Tree();
 
-	void loading() throws IOException {
-		BufferedReader in = new BufferedReader(new FileReader(new File("arquivo")));
+	void loading(String FileName) throws IOException {
+		BufferedReader in = new BufferedReader(new FileReader(new File(FileName)));
 
 		int readed = in.read();
 		while(readed != -1) {
@@ -75,16 +75,16 @@ public class Main {
 		System.out.println(tree);
 	}
 	
-	void charToBit() throws IOException {
+	void charToBit(String FileName) throws IOException {
 		preOrder(tree.root, "");
 		System.out.println(charBits);
 		
-		BufferedReader in = new BufferedReader(new FileReader(new File("arquivo")));
+		BufferedReader in = new BufferedReader(new FileReader(new File(FileName)));
 		
-		File fileObj = new File("arquivo-zipado");
+		File fileObj = new File(FileName + "-zipado");
 		fileObj.createNewFile();
 		
-		FileWriter out = new FileWriter("arquivo-zipado");
+		FileWriter out = new FileWriter(FileName + "-zipado");
 		int readed = in.read();
 		while(readed != -1) {
 			char c = (char) readed;
