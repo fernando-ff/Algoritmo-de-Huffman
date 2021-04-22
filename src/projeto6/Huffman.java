@@ -19,7 +19,7 @@ public class Huffman {
 		algoritmo.loading();
 		algoritmo.processing();	
 		algoritmo.charToBit();
-		algoritmo.bitToChar();
+		algoritmo.BitToChar();
 	}
 	
 	private Map<Character, Integer> listFrequency = new LinkedHashMap<>();
@@ -100,19 +100,17 @@ public class Huffman {
 		}
 	}
 	
-	public void bitToChar() {
-		bitToChar(tree.root, "");
+	public void BitToChar() {
+		BitToChar(tree.root, "");
 		System.out.println(bitsChar);
 	}
 	
-	private void bitToChar(Node node, String str) {
+	private void BitToChar(Node node, String str) {
 		if(node != null) {
-			//if(node.left != null) {
-				bitToChar(node.left, str+"0");
-			//}
-			//if(node.right != null) {
-				bitToChar(node.right, str+"1");
-			//}
+			
+			BitToChar(node.left, str+"0");
+			BitToChar(node.right, str+"1");
+			
 			if(node.symbol != null) {
 				bitsChar.put(str, node.symbol);
 			}
